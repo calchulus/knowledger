@@ -68,7 +68,7 @@ var resourceRef = resourceDB.orderByChild('tip');//limit to last
 
 // Form as a JSON
 $(document).ready(function() {
-  
+  var count = 0;
    // Check for change & list Items
 resourceRef.once("value")
   .then(function(snapshot) {
@@ -79,11 +79,7 @@ resourceRef.once("value")
       var $container = $('#container');
       for (var prop in tipsArray){
         var str = '';
-          var count += 1;
-          
-          
-          
-          
+        count += 1;
         var tipTime = moment.utc(tipsArray.tiptime).local().startOf('hour').fromNow();
           
               str += '<li style="padding-bottom: 14px"><a style=" display:block; text-decoration: none;" href=' + tipsArray.url +
@@ -101,6 +97,12 @@ resourceRef.once("value")
 //  valueNames: ['name', 'attr']
 //});
 //    
+   window.onload = function() {
+      document.getElementById("demo").innerHTML=count;
+}  
+    
+    
+   
     
       var aList = new List('origlist', { 
   valueNames: ['name', 'attr']
