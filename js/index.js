@@ -55,15 +55,21 @@ firebase.initializeApp(config);
 
 // New Firebase
 var resourceDB = firebase.database().ref('resource-tip');
-var chatDB = firebase.database().ref('crytpochat');
-var chatref = chatDB.limitToLast(2000);
-var resourceRef = resourceDB.orderByChild('tipTime');//limit to last
+var resourceRef = resourceDB.orderByChild('tip');//limit to last
 
-
+// orderByChild('tip')
+//function sorting() {
+//    x = document.getElement("text menu")
+//}
+//
+//ref.orderByKey().on("child_added", function(snapshot) {
+//  console.log(snapshot.key);
+//});
 
 // Form as a JSON
 $(document).ready(function() {
-  var count = 0;
+    var count = 0;
+
    // Check for change & list Items
 resourceRef.once("value")
   .then(function(snapshot) {
@@ -74,26 +80,32 @@ resourceRef.once("value")
       var $container = $('#container');
       for (var prop in tipsArray){
         var str = '';
-        
         var tipTime = moment.utc(tipsArray.tiptime).local().startOf('hour').fromNow();
-          count = count + 1; 
-              str += '<li style="padding-bottom: 14px"><a style=" display:block; text-decoration: none;" href=' + tipsArray.url +
-    '<div class="ui card"> <div class="content"> <div class="header" style="font-weight: bold; font-size: 1.28571429em; margin-top: -0.21Z425em; margin-bottom: 0.1em; line-height: 1.28571429em; color: rgba(0, 0, 0, 0.85) !important" >' +
-      tipsArray.tip + ' </div> <p style="font-size: 0.6em;" class="ui  blue  basic label">' + tipsArray.category + '</p> <p style="font-size: 0.6em;" class="ui  blue  basic label">' + tipTime + '</p> <div class="meta"> <p class="description">' + tipsArray.description + '</p></div></div></div></a></li>';  
+          
+              str += '<li style="padding-bottom: 14px"><a style=" display:block; text-decoration: none;" href=" ' + tipsArray.url + '"' +    '<div class="ui card"> <div class="content"> <div class="header" style="font-weight: bold; font-size: 1.28571429em; margin-top: -0.21Z425em; margin-bottom: 0.1em; line-height: 1.28571429em; color: rgba(0, 0, 0, 0.85) !important" >' +
+      tipsArray.tip + ' </div> <p style="font-size: 0.6em;" class="ui  blue  basic label">' + tipsArray.category + '</p> <p style="font-size: 0.6em;" class="ui  blue  basic label">' + tipTime + '</p> <div class="meta"> <p class="description">' + tipsArray.description + '</p></div></div></a></div></li>';  
 //    
 //              str.attr('link': tipsArray.url, 'title': tipsArray.tip, 'category': tipsArray.url, 'description': tipsArray.description);
         }
     
       // Create the list in HTML
       $('.list').append(str);
+        count = ++count;
     });
-        var display = count/5 + 1;
-         document.getElementById("demo").innerHTML=display + " results";
   });
 //var codepenList = new List('test-list', { 
 //  valueNames: ['name', 'attr']
 //});
 //    
+   window.onload = function() {
+      document.getElementById("demo").innerHTML=$list.length;
+}  
+      window.onload = function() {
+      document.getElementById("count").innerHTML=count;
+}  
+    
+    
+   
     
       var aList = new List('origlist', { 
   valueNames: ['name', 'attr']
@@ -107,8 +119,6 @@ resourceRef.once("value")
       event.preventDefault();
     
     // Get the form data
-      
-     if ($('textarea#url').val())  {
     resourceDB.push({
       'category': $('select#category').val(),
       'tip': $('textarea#tip').val(),
@@ -116,19 +126,9 @@ resourceRef.once("value")
       'description' : $('textarea#description').val(),
       'tiptime': Date.now()
     });
-     }
-      else {
-          chatDB.push({
-             'message' : $('textarea#description').val(), 
-                 'tiptime': Date.now()
-          });
-      }
-      
 
     console.log("sent");
     resourceformTip.reset();
-      resourceDB = firebase.database().ref('resource-tip');
-      resourceRef = resourceDB.orderByChild('tipTime');
 
   });
 });
@@ -159,20 +159,16 @@ $('.ui.dropdown')
 
 var $search = $('#search');
 $search.on('keyup', function () {
-  var filter = $(this).val();  
+  var filter = $(this).val(); 
+    var count = 0;
   if (filter) {
-    var $matches = $($container).find('li:icon(' + filter + ')');    
+    var $matches = $($container).find('li:icon(' + filter + ')');   
     $('ul', $container).not($matches).hide();
-    $matches.show(); 
-        	 
+    $matches.show();    
   }
   else {
-        	var size = $('ul').find('li').length;    
     $('li', $container).show();
   }  
   
-
-    
-    
   return false;
 });
